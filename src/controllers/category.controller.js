@@ -1,4 +1,4 @@
-import prisma from '../config/prisma.js';
+import prisma from '../config/prisma.js';//permite concestarse y ocupar la base de datos
 
 /**
  * Obtener todas las categorías incluyendo el conteo de productos
@@ -6,22 +6,32 @@ import prisma from '../config/prisma.js';
  */
 export const getAllCategories = async (req, res, next) => {
   try {
-    const categories = await prisma.category.findMany({
-      include: {
-        _count: {
-          select: { products: true } // Cantidad de productos en esta categoría
+    // Consulta todas las categorías en la tabla "categories".
+    // "await" espera la respuesta de la base de datos antes de continuar.
+    const categories = await prisma.category.findMany({ //findmany es equivalente a SELECT * FROM categories;
+      // Incluye información adicional relacionada con cada categoría.
+      include: {//include permite traer información de otras tablas relacionadas, en este caso la tabla products y mas información de la tabla categories
+        _count: { // count lo trae por defecto el prisma, pero se puede especificar que solo traiga el conteo de productos
+          // Cuenta cuántos productos pertenecen a cada categoría.
+          // No trae todos los productos, solo entrega el número.
+          select: { products: true }
         }
       },
+      // Ordena las categorías alfabéticamente por su nombre.
       orderBy: {
-        name: 'asc'
+        name: 'asc'// 'asc' → ascendente (A→Z, 0→9, fecha más antigua primero) 'desc' → descendente (Z→A, 9→0, fecha más reciente primero)
       }
     });
 
+    // Envía una respuesta HTTP 200 (consulta exitosa) en formato JSON.
     res.status(200).json({
+      // Informa cuántas categorías se encontraron.
       total: categories.length,
+      // Entrega el arreglo con las categorías y sus conteos de productos.
       data: categories
     });
   } catch (error) {
+    // Si ocurre un error, lo pasa al middleware global de errores.
     next(error);
   }
 };
@@ -32,11 +42,11 @@ export const getAllCategories = async (req, res, next) => {
  */
 export const getCategoryById = async (req, res, next) => {
   try {
-    const categoryId = Number(req.params.id);
+    const categoryId = Number(req.params.id); //req dato que ingresa el usuario, params es un objeto que contiene los parámetros de la ruta, en este caso el id de la categoría. Number convierte el valor a número.
 
-    const category = await prisma.category.findUnique({
+    const category = await prisma.category.findUnique({ // el findUnique es equivalente a SELECT * FROM categories WHERE id = categoryId;
       where: { id: categoryId },
-      include: {
+      include: { //como no hay select trae todo los campos de la tabla categories y products, pero si se quiere traer solo algunos campos se puede usar select
         products: {
           select: {
             id: true,
@@ -64,9 +74,9 @@ export const getCategoryById = async (req, res, next) => {
  * Crear una nueva categoría
  * POST /api/categories
  */
-export const createCategory = async (req, res, next) => {
+export const createCategory = async (req, res, next) => { //donde el cliente (frontend, Postman, etc.) manda datos en el cuerpo de la petición para crear una nueva categoría.
   try {
-    const { name, description } = req.body;
+    const { name, description } = req.body; //req.body es un objeto que contiene los datos enviados por el cliente en el cuerpo de la petición. En este caso, se espera que el cliente envíe un objeto JSON con las propiedades name y description para crear una nueva categoría. los otro datos de llenan solo 
 
     const newCategory = await prisma.category.create({
       data: {
