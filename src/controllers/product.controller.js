@@ -6,15 +6,15 @@ import prisma from '../config/prisma.js';
  */
 export const getAllProducts = async (req, res, next) => {
   try {
-    const { categoryId, minPrice, maxPrice, inStock } = req.query;
+    const { categoryId, minPrice, maxPrice, inStock } = req.query; //query hace referencia a los parametros que se pasan en la url, por ejemplo: /api/products?categoryId=1&minPrice=10000&maxPrice=50000&inStock=true
 
     const where = {};
 
     if (categoryId !== undefined) {
-      where.categoryId = Number(categoryId);
+      where.categoryId = Number(categoryId); //aca se valida que el categoryId sea un numero, si no lo es, se ignora el filtro
     }
 
-    if (minPrice !== undefined || maxPrice !== undefined) {
+    if (minPrice !== undefined || maxPrice !== undefined) { //aca se valida que el minPrice y maxPrice sean numeros, si no lo son, se ignora el filtro
       where.price = {};
       if (minPrice !== undefined) where.price.gte = Number(minPrice);
       if (maxPrice !== undefined) where.price.lte = Number(maxPrice);
