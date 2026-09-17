@@ -93,3 +93,19 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
+
+  // Comandos principales:
+  // 1. Si cambiaste schema.prisma, actualiza la estructura de la base de datos:
+  //    npm run prisma:migrate
+  //    También puedes ponerle un nombre a la migración:
+  //    npm run prisma:migrate -- --name nombre-del-cambio
+  //
+  // 2. Si necesitas cargar o reiniciar los datos de prueba de este archivo:
+  //    npm run prisma:seed
+  //    Atención: este seed elimina primero todos los productos y categorías.
+  //
+  // 3. Para iniciar la API en modo desarrollo:
+  //    npm run dev
+  //
+  // Si solo crearás un producto o una categoría desde Postman, no necesitas
+  // ejecutar migrate ni seed. Usa directamente los endpoints de la API.

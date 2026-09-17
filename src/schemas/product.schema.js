@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'; // se debe instalar zod para poder validar los datos de entrada, con npm install zod
 
 // Esquema para crear un producto (POST)
 export const createProductSchema = z.object({
