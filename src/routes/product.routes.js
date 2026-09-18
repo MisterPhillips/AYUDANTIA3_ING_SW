@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import {
-  getAllProducts,
+  getAllProducts, //son las funciones que se encuentran en el controller y que se ejecutan cuando se hace una petición a la ruta correspondiente
   getProductById,
   createProduct,
   updateProduct,
